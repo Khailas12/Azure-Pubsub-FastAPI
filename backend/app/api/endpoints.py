@@ -28,4 +28,3 @@ def trigger_api():
         pubsub_service.send_to_all(json.dumps({"message": f"API Triggered: error - {str(e)}", "status": "error"}))
         raise HTTPException(status_code=500, detail=str(e))
 
-# emit to a particular user - what if ther is 4 users? so handle for the dedicated one.
