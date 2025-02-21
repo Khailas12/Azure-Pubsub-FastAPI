@@ -7,6 +7,8 @@ function App() {
   const [client, setClient] = useState(null);
   const clientRef = useRef(null); // Create a ref to store the client
   const isListenerRegistered = useRef(false); // Track if the listener is already registered
+  const userId = "user123"; // Example user ID
+  const connectionId = "connection123"; // Example connection ID (this should be generated dynamically)
 
   useEffect(() => {
     const fetchWebSocketUrl = async () => {
@@ -26,7 +28,7 @@ function App() {
 
         // Register the message handler only once
         if (!isListenerRegistered.current) {
-          client.on("server-message", (e) => {
+          client.on("server-message", (e: { message: { data: string } }) => {
             console.log("Message received:", e);
 
             try {
@@ -41,6 +43,11 @@ function App() {
 
           isListenerRegistered.current = true; // Mark the listener as registered
         }
+
+        // Notify the server that the user has connected
+        await fetch(`http://127.0.0.1:8000/user-connected/${userId}/${connectionId}`, {
+          method: "POST",
+        });
       } catch (error) {
         console.error("Failed to connect to Web PubSub:", error);
       }
@@ -53,6 +60,9 @@ function App() {
       if (clientRef.current) {
         clientRef.current.stop(); // Stop the WebSocket connection
         isListenerRegistered.current = false; // Reset the listener flag
+        fetch(`http://127.0.0.1:8000/user-disconnected/${userId}`, {
+          method: "POST",
+        });
       }
     };
   }, []);
