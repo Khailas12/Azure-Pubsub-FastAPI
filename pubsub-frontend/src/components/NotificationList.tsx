@@ -10,11 +10,12 @@ const NotificationList = ({ messages }: NotificationListProps) => {
 
   useEffect(() => {
     // Only show a toast for the latest message
+    console.log('message==', messages)
     if (messages.length > 0) {
       const latestMessage = messages[messages.length - 1];
       showToast(latestMessage);
     }
-  }, [messages, showToast]);
+  }, [messages]); // Dependency array ensures this runs only when `messages` changes
 
   return <Toaster />;
 };
