@@ -27,19 +27,19 @@ class PubSubService:
         )
         print(f"Message sent to all: {message}")
 
-    def user_disconnected(self, connection_id):
-        """
-        Unregister a user connection.
-        """
-        for user_id, connections in self.user_connections.items():
-            if connection_id in connections:
-                connections.remove(connection_id)
-                if not connections:  # If the user has no more active connections, remove them from the dict
-                    del self.user_connections[user_id]
-                print(f"User {user_id} disconnected. Remaining connections:", self.user_connections)
-                return
+    # def user_disconnected(self, connection_id):
+    #     """
+    #     Unregister a user connection.
+    #     """
+    #     for user_id, connections in self.user_connections.items():
+    #         if connection_id in connections:
+    #             connections.remove(connection_id)
+    #             if not connections:  # If the user has no more active connections, remove them from the dict
+    #                 del self.user_connections[user_id]
+    #             print(f"User {user_id} disconnected. Remaining connections:", self.user_connections)
+    #             return
 
-        print(f"Connection {connection_id} not found.")
+    #     print(f"Connection {connection_id} not found.")
 
     def get_client_access_url(self, user_id):
         """
@@ -85,8 +85,10 @@ class PubSubService:
         """
         Send a message to a specific user.
         """
-        user_id = str(user_id)  # Ensure user_id is a string
-        if user_id in self.user_connections:
+        admin_user_ids = [1, 2, 3]  # List of admin user IDs
+        for user_id in admin_user_ids:
+            user_id = str(user_id)  # Ensure user_id is a string
+            # if user_id in self.user_connections:
             print(f"📤 Sending message to user {user_id}: {message}")
             try:
                 self.client.send_to_user(
@@ -97,7 +99,7 @@ class PubSubService:
                 print(f"✅ Message sent to user {user_id}")
             except Exception as e:
                 print(f"❌ Failed to send message to user {user_id}: {e}")
-        else:
-            print(f"⚠️ User {user_id} is not connected. Message not sent.")
+            # else:
+            #     print(f"⚠️ User {user_id} is not connected. Message not sent.")
 # Initialize the PubSubService instance
 pubsub_service = PubSubService()
